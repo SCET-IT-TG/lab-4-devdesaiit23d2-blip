@@ -1,4 +1,4 @@
-db = useSiblingsDB("movieDB")
+db = db.getSiblingDB("movieDB");
 
 db.movies.insertMany([
   { "title": "3 Idiots", "director": "Rajkumar Hirani", "year": 2009, "rating": 8.4, "genres": ["Comedy", "Drama"], "plot": "Two friends start a quest for a lost buddy who was once an optimistic engineering student." },
@@ -18,35 +18,24 @@ db.movies.insertMany([
   { "title": "PK", "director": "Rajkumar Hirani", "year": 2014, "rating": 8.1, "genres": ["Comedy", "Sci-Fi"], "plot": "An alien on Earth loses the only device he can use to communicate with his spaceship. His innocent nature and child-like questions force the country to evaluate the impact of religion on its people." }
 ]);
 
-db.movies.find({ rating: { $gt: 8.0 } }).explain("executionStats")
+db.movies.find({ rating: { $gt: 8.0 } }).explain("executionStats");
 
+db.movies.createIndex({ rating: 1 });
+db.movies.find({ rating: { $gt: 8.0 } }).explain("executionStats");
 
-db.movies.createIndex({ rating: 1 })
+db.movies.find().sort({ year: -1 }).explain("executionStats");
+db.movies.createIndex({ year: 1 });
+db.movies.find().sort({ year: -1 }).explain("executionStats");
 
-db.movies.find({ rating: { $gt: 8.0 } }).explain("executionStats")
+db.movies.createIndex({ director: 1, year: 1 });
+db.movies.find({ director: "S.S. Rajamouli", year: { $gt: 2018 } }).explain("executionStats");
 
-db.movies.find().sort({ year: -1 }).explain("executionStats")
-
-db.movies.createIndex({ year: 1 })
-
-db.movies.find().sort({ year: -1 }).explain("executionStats")
-
-db.movies.createIndex({ director: 1, year: 1 })
-
-db.movies.find({
-  director: "S.S. Rajamouli",
-  year: { $gt: 2018 }
-})
-
-
+db.movies.find(
   { year: { $gt: 2010 } },
   { _id: 0, year: 1 }
-).explain("executionStats")
+).explain("executionStats");
 
-ovies.createIndex({ plot: "text" })
+db.movies.createIndex({ plot: "text" });
+db.movies.find({ $text: { $search: "cricket gangster" } });
 
-db.movies.find({
-  $text: { $search: "cricket gangster" }
-})
-
-db.movies.getIndexes()
+db.movies.getIndexes();
